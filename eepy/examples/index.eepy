@@ -1,0 +1,10 @@
+<html>
+<body>
+@include:examples/header.eepy
+@for post in posts:
+    <hr>
+    <h2>{{post['title']}}</h2>
+    <p>{{post['content']}}</p>
+@end
+</body>
+</html>

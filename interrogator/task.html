@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="description">You need to return a number multiplied by two.</div><br>
+    <textarea name="code" id="code"></textarea><br>
+    <button id="run">Run</button><br>
+    <code id="output"></code>
+    <script>
+        const code = document.getElementById("code");
+        const output = document.getElementById("output");
+        const run = document.getElementById("run");
+        run.addEventListener("click", () => {
+            let result = code.value;
+            tests(result);
+        });
+
+        function tests(code) {
+            eval(code);
+            let suites = [
+                {
+                    input: [2],
+                    output: 4
+                },
+                {
+                    input: [3],
+                    output: 6
+                }
+            ];
+            
+            output.innerHTML = "";
+            for (suite of suites) {
+                let l = solution(...suite.input)
+                if (suite.output == l){
+                    output.innerHTML += `<p style="color: green;">OK: ${suite.input} -> ${suite.output}</p>`;
+                } else {
+                    output.innerHTML += `<p style="color: red;">ERR: ${suite.input} -> ${l} != ${suite.output}</p>`;
+                }
+            }
+        }
+    </script>
+</body>
+</html>

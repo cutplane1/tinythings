@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    /* 1. Use a more-intuitive box-sizing model */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  
+  /* 2. Remove default margin */
+  * {
+    margin: 0;
+  }
+  
+  body {
+    /* 3. Add accessible line-height */
+    line-height: 1.5;
+    /* 4. Improve text rendering */
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  /* 5. Improve media defaults */
+  img, picture, video, canvas, svg {
+    display: block;
+    max-width: 100%;
+  }
+  
+  /* 6. Inherit fonts for form controls */
+  input, button, textarea, select {
+    font: inherit;
+  }
+  
+  /* 7. Avoid text overflows */
+  p, h1, h2, h3, h4, h5, h6 {
+    overflow-wrap: break-word;
+  }
+  
+  /* 8. Improve line wrapping */
+  p {
+    text-wrap: pretty;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    text-wrap: balance;
+  }
+  
+  /*
+    9. Create a root stacking context
+  */
+  #root, #__next {
+    isolation: isolate;
+  }
+</style>
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+    font-family: "Segoe UI", Arial, sans-serif;
+  }
+
+  .main {
+    height: 100vh;
+    background: url("https://w.wallhaven.cc/full/5d/wallhaven-5dgl63.jpg");
+    background-size: cover;
+    position: relative;
+  }
+
+  footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: black;
+    opacity: 0.5;
+    padding: 2px;
+  }
+
+  .start {
+    color: white;
+    text-decoration: none;
+    padding: 0 10px;
+    float: left;
+    cursor: pointer;
+  }
+
+  .start:hover {
+    color: red;
+  }
+
+  .clock {
+    color: white;
+    padding: 0 10px;
+    float: right;
+  }
+
+  .window {
+    position: absolute;
+    background-color: black;
+    opacity: 0.6;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: 300px;
+    min-height: 200px;
+    min-width: 200px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    color: white;
+    resize: both;
+    overflow: hidden;
+  }
+
+  .window.maximized {
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: calc(100vh - 30px) !important;
+    transform: none !important;
+  }
+
+  .window-header {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px;
+    cursor: move;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .window-controls {
+    display: flex;
+    gap: 5px;
+  }
+
+  .close-button, .maximize-button {
+    cursor: pointer;
+    padding: 0 5px;
+  }
+
+  .close-button:hover, .maximize-button:hover {
+    color: red;
+  }
+
+  .window-content {
+    padding: 10px;
+    height: calc(100% - 30px);
+  }
+</style>
+</head>
+<body class="main">
+  <footer>
+    <a class="start">spawn window</a>
+    <a class="start" onclick="window.location.reload()">reload</a>
+    <div class="clock" id="clock"></div>
+  </footer>
+
+  <script>
+    let windowCount = 0;
+
+    document.addEventListener('DOMContentLoaded', function() {
+      function updateClock() {
+        const now = new Date();
+        const time = now.toLocaleTimeString();
+        document.getElementById('clock').textContent = time;
+      }
+      setInterval(updateClock, 1000);
+      updateClock();
+
+      document.querySelector('.start').addEventListener('click', createWindow);
+    });
+
+    function createWindow() {
+      windowCount++;
+      const windowId = 'window_' + windowCount;
+      
+      const windowHTML = `
+        <div class="window" id="${windowId}" style="top: ${50 + windowCount * 20}px; left: ${50 + windowCount * 20}px">
+          <div class="window-header" id="${windowId}_header">
+            <span class="window-title">window title</span>
+            <div class="window-controls">
+              <span class="maximize-button" onclick="toggleMaximize(this)">□</span>
+              <span class="close-button" onclick="closeWindow(this)">×</span>
+            </div>
+          </div>
+          <div class="window-content">
+            <div style="font-size: 100px">HI!</div>
+          </div>
+        </div>
+      `;
+
+      document.body.insertAdjacentHTML('beforeend', windowHTML);
+
+      const windowElement = document.getElementById(windowId);
+      const header = document.getElementById(windowId + '_header');
+      makeDraggable(windowElement, header);
+    }
+
+    function toggleMaximize(element) {
+      const window = element.closest('.window');
+      window.classList.toggle('maximized');
+      
+      if (window.classList.contains('maximized')) {
+        window.dataset.prevStyle = window.getAttribute('style');
+      } else {
+        if (window.dataset.prevStyle) {
+          window.setAttribute('style', window.dataset.prevStyle);
+        }
+      }
+    }
+
+    function closeWindow(element) {
+      element.closest('.window').remove();
+    }
+
+    function makeDraggable(windowElement, header) {
+      let isDragging = false;
+      let currentX;
+      let currentY;
+      let initialX;
+      let initialY;
+      let xOffset = 0;
+      let yOffset = 0;
+
+      header.addEventListener('mousedown', dragStart);
+      document.addEventListener('mousemove', drag);
+      document.addEventListener('mouseup', dragEnd);
+      header.addEventListener('dblclick', function() {
+        toggleMaximize(header.querySelector('.maximize-button'));
+      });
+
+      function dragStart(e) {
+        if (windowElement.classList.contains('maximized')) {
+          toggleMaximize(header.querySelector('.maximize-button'));
+          const windowWidth = windowElement.offsetWidth;
+          xOffset = 0;
+          yOffset = 0;
+          windowElement.style.left = (e.clientX - windowWidth/2) + 'px';
+          windowElement.style.top = e.clientY + 'px';
+        }
+
+        initialX = e.clientX - xOffset;
+        initialY = e.clientY - yOffset;
+
+        if (e.target === header || e.target.closest('.window-header')) {
+          isDragging = true;
+          const windows = document.querySelectorAll('.window');
+          windows.forEach(w => w.style.zIndex = '1');
+          windowElement.style.zIndex = '1000';
+        }
+      }
+
+      function drag(e) {
+        if (isDragging && !windowElement.classList.contains('maximized')) {
+          e.preventDefault();
+          
+          currentX = e.clientX - initialX;
+          currentY = e.clientY - initialY;
+
+          xOffset = currentX;
+          yOffset = currentY;
+
+          setTranslate(currentX, currentY, windowElement);
+        }
+      }
+
+      function setTranslate(xPos, yPos, el) {
+        el.style.transform = `translate(${xPos}px, ${yPos}px)`;
+      }
+
+      function dragEnd(e) {
+        initialX = currentX;
+        initialY = currentY;
+        isDragging = false;
+      }
+    }
+  </script>
+</body>
+</html>
