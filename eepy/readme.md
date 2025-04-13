@@ -1,10 +1,11 @@
 # neepy ((Not) Enough Embedded PYthon)
 pretty bad template engine without sandboxing
+
 python syntax is not quite suitable for a templating engine but i like the outcome 
-<br>
-python code line starts with `@`(at) symbol
-"Variable Expressions" must be in double curly braces: `{{post['created_at']}}`
-you can include other templates with `@include:`: `@include:whatever_template.eepy`
+
+python code line starts with `@`(at) symbol<br>
+"Variable Expressions" must be in double curly braces: `{{post['created_at']}}`<br>
+you can include other templates with `@include:`: `@include:whatever_template.eepy`<br>
 "Compound Statements"(if, for) must be closed with `@end`:
 ```
 @for level in range(1,6+1):
