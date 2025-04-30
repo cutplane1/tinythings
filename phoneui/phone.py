@@ -1,9 +1,13 @@
 import pyray as rl
 from datetime import datetime
-
+# today is:
+today_is=datetime.now().strftime("%d-%m-%y")
 last_selected = None
-
-res = (320, 480)
+texture = None
+battery_tex = None
+font = None
+# res = (320, 480)
+res = (176, 220)
 def hex_to_rgb(hex: str) -> tuple[int, int, int]:
     return tuple(int(hex[i:i + 2], 16) for i in (0, 2, 4))
 
@@ -16,27 +20,58 @@ palette = palettes[3]
 screenwhite = rl.Color(palette[0][0], palette[0][1], palette[0][2], 255)
 screenblack =  rl.Color(palette[1][0], palette[1][1], palette[1][2], 255)
 
+img_something = rl.load_image("refs/theme1/3014_Natur_Pur/Navi1.png")
 
-def draw_controls(left_btn_name = "Select", right_btn_name = "Menu", right_btn_offset = 240):
-    rl.draw_text(left_btn_name, 5, res[1] - 30, 30, screenblack)
-    rl.draw_text(right_btn_name, right_btn_offset, res[1] - 30, 30, screenblack)
+
+def draw_controls(left_btn="Select", center_btn=None, right_btn="Menu"):
+    global font
+    y_position = res[1] - 20
+    font_size = 16
+
+    if left_btn:
+        # rl.draw_text(left_btn, 5, y_position, font_size, screenblack)
+        rl.draw_text_ex(font, left_btn, (4, y_position), font_size, 0, rl.BLACK)
+
+    if center_btn:
+        # center_width = rl.measure_text(center_btn, font_size)
+        center_width = rl.measure_text_ex(font, center_btn, font_size, 0).x
+        center_x = (res[0] - center_width) // 2
+        # rl.draw_text(center_btn, center_x, y_position, font_size, screenblack)
+        rl.draw_text_ex(font, center_btn, (center_x, y_position), font_size, 0, rl.BLACK)
+
+    if right_btn:
+        # right_width = rl.measure_text(right_btn, font_size)
+        right_width = rl.measure_text_ex(font, right_btn, font_size, 0).x
+        right_x = res[0] - right_width - 4
+        # rl.draw_text(right_btn, right_x, y_position, font_size, screenblack)
+        rl.draw_text_ex(font, right_btn, (right_x, y_position), font_size, 0, rl.BLACK)
+
+
+class Controls:
+    def __init__(self, left_btn_name = "Select", center_btn_name = None, right_btn_name = "Menu"):
+        self.left_btn_name = left_btn_name
+        self.center_btn_name = center_btn_name
+        self.right_btn_name = right_btn_name
+    
+    def draw(self):
+        draw_controls(self.left_btn_name, self.center_btn_name, self.right_btn_name)
 
 class Menu:
-    def __init__(self, left_btn_name = "Select", select_scene = None):
+    def __init__(self, ctls: Controls, select_scene = None):
         self.options = []
         self.selected = 0
-        self.left_btn_name = left_btn_name
+        self.ctls = ctls
         self.select_scene = select_scene
 
     def draw(self):
         for i, option in enumerate(self.options):
             if i == self.selected:
-                rl.draw_rectangle(0, i * 50, 320, 50, screenblack)
-                rl.draw_text(str(option), 10, i * 50 + 10, 40, screenwhite)
+                rl.draw_rectangle(0, i * 30, 320, 30, screenblack)
+                rl.draw_text(str(option), 10, i * 30 + 10, 20, screenwhite)
             else:
-                rl.draw_text((str(option)), 10, i * 50 + 10, 40, screenblack)
+                rl.draw_text((str(option)), 10, i * 30 + 10, 20, screenblack)
         
-        draw_controls(self.left_btn_name)
+        self.ctls.draw()
     
     def controls(self):
         global last_selected
@@ -57,7 +92,7 @@ class Menu:
         if rl.is_key_pressed(rl.KEY_DOWN):
             self.selected += 1
 
-menu = Menu("Select")
+menu = Menu(Controls())
 menu.options = ["Contacts", "Settings"]
 
 
@@ -73,11 +108,18 @@ class Start:
             sm.change_scene("Contacts")
 
     def draw(self):
-        time = datetime.now().strftime("%H:%M")
-        # time = "13:37"
-        rl.draw_text(time, 60, 100, 80, screenblack)
+        global texture
+        global font
+        rl.draw_texture(texture, 0, 0, rl.WHITE)
+        rl.draw_texture(battery_tex, 145, 5, rl.Color(255, 255, 255, 255))
+        # time = datetime.now().strftime("%H:%M")
+        # rl.draw_text(time, 0, 0, 30, screenblack)
+        # hardcoded coords. again. :>
+        rl.draw_text_ex(font, "MeowTelecom", (37, 40), 18, 0, rl.BLACK)
+        rl.draw_text_ex(font, "13:37", (5, 170), 18, 0, rl.BLACK)
+        rl.draw_text_ex(font, today_is, (110, 170), 18, 0, rl.BLACK)
 
-        draw_controls("Select", "Contacts", 175)
+        draw_controls(left_btn="Menu", right_btn="Contacts")
 
 
 st = Start()
@@ -99,7 +141,7 @@ class SceneManager:
     def draw(self):
         self.scenes[self.current_scene].draw()
 
-contacts = Menu("Call")
+contacts = Menu(Controls(left_btn_name=None, center_btn_name="Call", right_btn_name="Start"))
 contacts.options = ["you", "your mommy", "mossad"]
 
 class Action:
@@ -117,10 +159,10 @@ class ChangePaletteAction(Action):
 
 
 
-settings = Menu("Select")
+settings = Menu(Controls(left_btn_name="Select", right_btn_name="Menu"))
 settings.options = ["Themes"]
 
-themes = Menu("Change", "change_palette_ac")
+themes = Menu(Controls(left_btn_name=None, center_btn_name="Change", right_btn_name="Back"), "change_palette_ac")
 themes.options = palettes
 
 
@@ -140,8 +182,17 @@ def add_app(app_name, app_scene):
 
 
 def run(scene = "Start"):
+    global texture
+    global font
+    global battery_tex
     sm.change_scene(scene)
     rl.init_window(res[0], res[1], "PhoneUI")
+    texture = rl.load_texture_from_image(img_something)
+    battery_img = rl.load_image("refs/batt.png")
+    battery_tex = rl.load_texture_from_image(battery_img)
+    rl.unload_image(battery_img)
+    font = rl.load_font("arial.ttf")
+    rl.unload_image(img_something)
     while not rl.window_should_close():
         sm.controls()
         rl.begin_drawing()

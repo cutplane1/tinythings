@@ -12,7 +12,7 @@ class Clicker:
     
     def draw(self):
         rl.draw_text("Clicks: " + str(self.clicks), 0, 0, 40, screenblack)
-        draw_controls("Click")
+        draw_controls(center_btn="Click", left_btn=None)
 
 add_app("Clicker", Clicker())
 run()
