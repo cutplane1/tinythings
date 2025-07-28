@@ -11,12 +11,15 @@ wallpaper_src = "wallhaven-rq75r7_1920x1080.png"
 wallpaper = Image.open(wallpaper_src)
 
 
-rect = Image.new("RGBA", (300,300), (0, 0, 0, 128))
+fl = Image.new("RGBA", wallpaper.size, (0, 0, 0, 0))
 
-# d = ImageDraw.Draw(rect)
-# d.rectangle()
+ctx = ImageDraw.Draw(fl)
 
-# rect.show()
+def rect(ctx,x,y,w,h,fill):
+    ctx.rectangle([(x,y),(x+w,y+h)], fill = fill, width=0)
 
-out = Image.alpha_composite(wallpaper, rect)
-# out.show()
+rect(ctx, 300, 300, 300, 200, (0,0,0,128))
+
+out = Image.alpha_composite(wallpaper, fl)
+
+out.show()
