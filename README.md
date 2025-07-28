@@ -1,1 +1,1 @@
-monorepo for unfinished things
+monorepo for tiny or unfinished things

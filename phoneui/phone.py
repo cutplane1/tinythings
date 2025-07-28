@@ -1,6 +1,5 @@
 import pyray as rl
 from datetime import datetime
-# today is:
 today_is=datetime.now().strftime("%d-%m-%y")
 last_selected = None
 texture = None

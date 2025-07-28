@@ -37,6 +37,9 @@ class Element:
         if self.children:
             for each in self.children:
                 each.print_element_tree()
+    
+    # def to_dict():
+    #     def rr(e):
 
 
 def parse_html(html: str) -> Element:

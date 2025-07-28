@@ -1,6 +1,0 @@
-{
-    "Url": "localhost",
-    "Port": 6969,
-    "Name": "Imageboard",
-    "Boards": ["b"]
-}
