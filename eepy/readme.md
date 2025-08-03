@@ -1,4 +1,4 @@
-# neepy ((Not) Enough Embedded PYthon)
+# eepy (Enough Embedded PYthon)
 pretty bad template engine without sandboxing
 
 python syntax is not quite suitable for a templating engine but i like the outcome 
@@ -22,11 +22,11 @@ index.eepy
 @end
 ```
 ```
-import neepy
+import eepy
 posts = [
     {"title":"hello", "text": "world"}
 ]
-html = neepy.read("index.eepy", {"posts": posts})
+html = eepy.read("index.eepy", {"posts": posts})
 response(html)
 ```
 ## API:

@@ -1,4 +1,4 @@
-import neepy
+import eepy
 
 links = [("Home", "/"), ("About", "/about"), ("Contact", "/contact")]
 my_posts = [
@@ -7,4 +7,4 @@ my_posts = [
     {"title": "r8 my xss", "content": "<script>alert('hi n00b')</script>"}
 ]
 
-print(neepy.read("examples/index.eepy", {"posts": my_posts, "links": links}))
+print(eepy.read("examples/index.eepy", {"posts": my_posts, "links": links}))
