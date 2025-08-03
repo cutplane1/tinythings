@@ -46,15 +46,15 @@ class GenWorker(QThread):
 
     def run(self):
         try:
-            print("Details generation started")
+            print("[log] details generation started")
             self.progress.emit(GenProgress.DETAILS.value)
-            self.agent.generate_details()
-            print("Code generation started")
+            self.agent.generate_details(self.agent.language)
+            print("[log] code generation started")
             print("details:", self.agent.details)
             self.progress.emit(GenProgress.CODE.value)
             self.agent.generate_code()
         except Exception as e:
-            print(f"Error during code generation: {e}")
+            print(f"error during code generation: {e}")
             self.progress.emit(GenProgress.ERROR.value)
             return
         self.dcode.emit(self.agent.code)
@@ -71,11 +71,11 @@ class GenerationWidget(QtWidgets.QWidget):
         self.ai_agent = GameGenAgent(game)
         self.ai_agent.api_token = api_token
         self.ai_agent.model = model_name
-        self.ai_agent.language = "english"
+        self.ai_agent.language = "russian"
 
-        self.setWindowTitle("generation in progress")
+        self.setWindowTitle("генерация в процессе")
 
-        self.label = QtWidgets.QLabel("generating...")
+        self.label = QtWidgets.QLabel("генерация...")
         self.progress = QtWidgets.QProgressBar()
         self.progress.setRange(0, 0)
         self.progress.setTextVisible(False)
@@ -87,7 +87,7 @@ class GenerationWidget(QtWidgets.QWidget):
         self.setMinimumSize(220, 80)
 
     def start(self):
-        print("Starting generation...")
+        print("[log] starting generation...")
         self.thread = GenWorker(self.ai_agent)
         self.thread.progress.connect(self.on_progress)
         self.thread.dcode.connect(self.done)
@@ -95,11 +95,11 @@ class GenerationWidget(QtWidgets.QWidget):
 
     def on_progress(self, val):
         if val == GenProgress.DETAILS.value:
-            self.label.setText("generating details...")
+            self.label.setText("генерация деталей...")
         elif val == GenProgress.CODE.value:
-            self.label.setText("generating code...")
+            self.label.setText("генерация кода...")
         elif val == GenProgress.ERROR.value:
-            self.label.setText("error during generation, check console for details")
+            self.label.setText("ошибка генерации, посмотри информацию об ошибке в консоль")
             self.progress.setRange(0, 1)
             self.progress.setValue(1)
             return
@@ -115,7 +115,7 @@ class GenerationWidget(QtWidgets.QWidget):
             f.write(c)
 
         self.label.setText(
-            "done! you can find your game in the folder: " + self.game.folder_to_save
+            "готово! игра находится в папке " + self.game.folder_to_save
         )
         self.progress.setRange(0, 1)
         self.progress.setValue(1)
@@ -127,7 +127,7 @@ class GenerationWidget(QtWidgets.QWidget):
 class TokenSettings(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Token Settings")
+        self.setWindowTitle("Настройки")
 
         self.api_token_label = QLabel("API TOKEN:")
         self.api_token_input = QLineEdit(text="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")
@@ -153,7 +153,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.token_settings.triggered.connect(self.settings)
 
     def file_pick(self):
-        folder = QtWidgets.QFileDialog.getExistingDirectory(self, "Select Folder")
+        folder = QtWidgets.QFileDialog.getExistingDirectory(self, "Выбери папку")
         if folder:
             self.path.setText(folder)
 
@@ -182,6 +182,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         folder_to_save = self.path.text()
 
+
         game = Game(
             name=name,
             genres=genres,
@@ -191,12 +192,16 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         )
 
         return game
-        # return generate_game_prompt(game)
 
     def create_button_action(self):
         if self.settings_window.api_token_input.text() == "":
             QtWidgets.QMessageBox.warning(
-                self, "Error", "Please enter your API token in the settings."
+                self, "Error", "проверь свой api ключ в настройках"
+            )
+            return
+        if self.path.text() == "":
+            QtWidgets.QMessageBox.warning(
+                self, "Error", "папка не выбрана"
             )
             return
         self.create_b.setEnabled(False)
