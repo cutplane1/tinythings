@@ -1,0 +1,2 @@
+# wallpaint
+static widgets
