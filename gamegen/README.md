@@ -5,3 +5,6 @@
 воссоздание того [мема](https://github.com/cutplane1/tinythings/tree/master/gamegen/references) но в "эпоху нейросетей".
 
 использует LiteLLM для подключения к ЛЛМкам.
+
+## установка
+pip install litellm PySide6
