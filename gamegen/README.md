@@ -1,5 +1,5 @@
 # Генератор игр v0.00001
 
-![screnshoot]()
+![screnshoot](https://github.com/cutplane1/tinythings/blob/master/gamegen/image.png)
 
-воссаздание того мема[]() но в "эпоху нейросетей".
+воссаздание того [мема](https://github.com/cutplane1/tinythings/tree/master/gamegen/references) но в "эпоху нейросетей".
