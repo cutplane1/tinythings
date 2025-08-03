@@ -5,51 +5,43 @@ import parser
 #response: str = requests.get("http://example.com").text
 html = '<h1>Hello, World!</h1><br><a href="https://github.com/cutplane1">my github profile!</a><br>bye!!'
 root = parser.parse_html(html)
-import pyray
 
-# def main(html):
+from dataclasses import dataclass
+from enum import Enum
 
-
-#     context = {"is_link": False, "link": None}
-#     def render(e):
-#         global context
-
-#         if e.tag == "<text_internal>":
-#             print(e.attributes["text"], end="")
-#             if context:
-#                 print("({})".format(context["link"]), end="") if context["is_link"] else print("", end="")
-#                 print("\033[0m", end="")
-#                 context["is_link"] = False
-#                 context["link"] = None
-
-#         if e.tag == "<a>":
-#             # color ascii text
-#             print("\033[0;34m", end="")
-#             context["link"] = e.attributes["href"]
-#             context["is_link"] = True
-        
-#         if e.tag == "<br>":
-#             print("\n", end="")
+class ElemType(Enum):
+    H1 = "h1"
+    A = "a"
+    BR = "br"
+    TEXT = "text"
+    UNKNOWN = "unknown"
 
 
-#     # root.process(parser.str_debug)
-#     root.process(render)
-# main(html)
+@dataclass
+class LayoutObject:
+    x: int
+    y: int
+    type: ElemType = ElemType.UNKNOWN
 
-context = {"coord_offset": 10}
+# def layout(e: parser.Element) -> list[LayoutObject]:
+#     coord_stack = 0
+#     layout_objects = []
 
-def proc(e):
-    global context
-    if e.tag == "<text_internal>":
-        pyray.draw_text(e.attributes["text"], 10, context["coord_offset"], 20, pyray.BLACK)
-        context["coord_offset"] += 20
-    context["coord_offset"] = 10
+#     def layout_closure(element: parser.Element):
+#         global coord_stack
+#         global layout_objects
+#         if element.tag == "h1":
+#             layout_objects.append(LayoutObject(coord_stack, 0, ElemType.H1))
+#             # text measuring would go here
+#             coord_stack += 20 # assuming
+#         elif element.tag == "br":
+#             coord_stack += 10
+#         elif element.tag == "a":
+#             layout_objects.append(LayoutObject(coord_stack, 0))
 
-from pyray import *
-init_window(800, 450, "Hello")
-while not window_should_close():
-    begin_drawing()
-    clear_background(WHITE)
-    root.process(proc)
-    end_drawing()
-close_window()
+#     e.process(layout_closure)
+#     return layout_objects
+
+
+
+print(root)

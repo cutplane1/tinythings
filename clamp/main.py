@@ -27,7 +27,7 @@ result_page = """<!DOCTYPE html>
 </body>
 </html>"""
 
-scanner = get_scanner()
+scanner = get_scanner({"backend": "clamd"})
 
 @route('/')
 def index():
