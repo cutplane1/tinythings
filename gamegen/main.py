@@ -7,7 +7,6 @@ from PySide6 import QtCore
 
 from PySide6.QtCore import QThread, Signal
 from shared import Game
-from agent import GameGenAgent
 
 html_temp = """<!DOCTYPE html>
 <html lang="en">
@@ -50,7 +49,7 @@ class GenWorker(QThread):
             self.progress.emit(GenProgress.DETAILS.value)
             self.agent.generate_details(self.agent.language)
             print("[log] code generation started")
-            print("details:", self.agent.details)
+            print("details:", self.agent.details[:50])
             self.progress.emit(GenProgress.CODE.value)
             self.agent.generate_code()
         except Exception as e:
@@ -84,10 +83,10 @@ class GenerationWidget(QtWidgets.QWidget):
         layout.addWidget(self.label, alignment=QtCore.Qt.AlignCenter)
         layout.addWidget(self.progress)
 
-        self.setMinimumSize(220, 80)
+        self.setMinimumSize(370, 65)
 
     def start(self):
-        print("[log] starting generation...")
+        print("[log] starting generation")
         self.thread = GenWorker(self.ai_agent)
         self.thread.progress.connect(self.on_progress)
         self.thread.dcode.connect(self.done)
@@ -130,7 +129,7 @@ class TokenSettings(QtWidgets.QWidget):
         self.setWindowTitle("Настройки")
 
         self.api_token_label = QLabel("API TOKEN:")
-        self.api_token_input = QLineEdit(text="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")
+        self.api_token_input = QLineEdit()
 
         self.model_name_label = QLabel("MODEL NAME (LiteLLM):")
         self.model_name_input = QLineEdit(text="openrouter/moonshotai/kimi-k2:free")
@@ -220,6 +219,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
 if __name__ == "__main__":
+    print("[log] starting up")
+    from agent import GameGenAgent
     app = QtWidgets.QApplication([])
     main_window = MainWindow()
     main_window.show()
