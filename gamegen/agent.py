@@ -2,11 +2,6 @@
 i still have no idea what an "AI Agent" is.
 """
 
-"""
-call 1: game ideas prompt generation
-call 2: technical details
-"""
-
 from shared import Game
 from litellm import completion
 
@@ -87,7 +82,7 @@ if __name__ == "__main__":
     )
     
     agent = GameGenAgent(game)
-    agent.api_token = "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"
+    agent.api_token = "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" # i dont care
     agent.generate_details()
     print(agent.details)
     agent.generate_code()

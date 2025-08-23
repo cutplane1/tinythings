@@ -291,7 +291,7 @@ while not rl.window_should_close():
         bullet.draw()
     
     rl.draw_rectangle(0, 0, 180, 60, rl.BLACK)
-    rl.draw_text("MEM: {:.2f} MB".format(process_memory()), 0, 0, 20, rl.WHITE)
+    #rl.draw_text("MEM: {:.2f} MB".format(process_memory()), 0, 0, 20, rl.WHITE)
     rl.draw_text("OBJS: {}".format(len(bullets)), 0, 20, 20, rl.WHITE)
     rl.draw_text("FPS: {}".format(rl.get_fps()), 0, 40, 20, rl.WHITE)
     rl.draw_text("HEALTH: {}".format(health), 0, 60, 20, rl.WHITE)

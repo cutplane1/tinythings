@@ -1,5 +1,5 @@
 # eepy (Enough Embedded PYthon)
-pretty bad template engine without sandboxing
+pretty bad template engine without sandboxing and anything else
 
 python syntax is not quite suitable for a templating engine but i like the outcome 
 
