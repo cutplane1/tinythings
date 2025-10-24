@@ -12,7 +12,8 @@ def git_push_script():
     folder = r""
     import os
     print(f"-uploading...-")
-    os.chdir(folder)
+    if folder != "":
+        os.chdir(folder)
     os.system('git add .')
     os.system('git commit -m "upd"')
     os.system('git push')
