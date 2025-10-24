@@ -8,11 +8,14 @@ def add_post(pattern: tuple, text: str, file_name: str, date: str):
         m_contents = contents.replace(pattern[0]+pattern[1], pattern[0]+tmpl.format(date, text)+pattern[1],1)
         f.write(m_contents)
 
-def upload_to_github_pages():
-    # i made tmp
+def git_repo_push_script():
+    folder = "cutplane.github.io"
+    import os
+    os.system(r'echo %cd%')
 
 if __name__ == "__main__":
     import sys
     import datetime
     now = datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat()
     add_post(('</a>\n', '<div class="post">\n'), " ".join(sys.argv[1:]), "microblog.html", now)
+    git_repo_push_script()
