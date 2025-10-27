@@ -19,10 +19,24 @@ def git_push_script():
     os.system('git push')
     print(f"-upload completed-")
 
+def parse_args(args: list[str]):
+    e = []
+    for arg in args:
+        if arg.startswith("http"):
+            if arg.endswith(('.apng', '.png', '.avif', '.gif', '.jpg', '.jpeg', '.png', '.svg', '.webp')):
+                e.insert(0, f'<img src="{arg}"><br>')
+            else:
+                e.append(f'<a href="{arg}">{arg}</a>')
+        elif arg == "~n":
+            e.append("<br>")
+        else:
+            e.append(arg)
+    return " ".join(e)
+
 if __name__ == "__main__":
     import sys
     import datetime
     now = datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat()
     print(f"-writing to file...-")
-    add_post(('</a>\n', '<div class="post">\n'), " ".join(sys.argv[1:]), r"nanoblog.html", now)
+    add_post(('</a>\n', '<div class="post">\n'), parse_args(sys.argv[1:]), r"nanoblog.html", now)
     # git_repo_push_script()

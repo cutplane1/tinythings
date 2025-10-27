@@ -78,7 +78,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     wc.hInstance     = hInstance;
     wc.lpszClassName = "CaffeinePillWindowClassOrSomething";
     wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
-    wc.hIcon         = (HICON) LoadImage(GetModuleHandle(NULL), "MY_ICON", IMAGE_ICON, 32, 32, 0);
+    wc.hIcon         = (HICON) LoadImage(GetModuleHandle(NULL), "IDI_ICON_1", IMAGE_ICON, 32, 32, 0);
     wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 
     RegisterClassA(&wc);
