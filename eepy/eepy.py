@@ -8,7 +8,7 @@ PythonScript: TypeAlias = str
 def parse(template: str, variables: dict = None, escape_html: bool = True, newmodule: bool = True) -> PythonScript:
     code = ""
 
-    if variables is not None:
+    if variables:
         for var, value in variables.items():
             code += "{} = {}\n".format(var, repr(value))
     
