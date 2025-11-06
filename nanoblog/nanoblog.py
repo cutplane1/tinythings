@@ -1,4 +1,5 @@
 tmpl = '<div class="post">\n<time>{}</time>\n<p>{}</p>\n</div>\n'
+url = ""
 
 def add_post(pattern: tuple, text: str, file_name: str, date: str):
     with open(file_name, "r", encoding="utf-8") as f:
@@ -8,21 +9,24 @@ def add_post(pattern: tuple, text: str, file_name: str, date: str):
         m_contents = contents.replace(pattern[0]+pattern[1], pattern[0]+tmpl.format(date, text)+pattern[1],1)
         f.write(m_contents)
 
-def git_push_script():
+def git_repo_push_script():
     folder = r""
     import os
     print(f"-uploading...-")
-    if folder != "":
+    if folder:
         os.chdir(folder)
     os.system('git add .')
     os.system('git commit -m "upd"')
     os.system('git push')
     print(f"-upload completed-")
 
+
 def parse_args(args: list[str]):
     e = []
     for arg in args:
-        if arg.startswith("http"):
+        if arg.startswith("http") or arg.startswith("@"):
+            if arg.startswith("@"):
+                arg = url + "/" + arg[1:]
             if arg.endswith(('.apng', '.png', '.avif', '.gif', '.jpg', '.jpeg', '.png', '.svg', '.webp')):
                 e.insert(0, f'<img src="{arg}"><br>')
             else:
@@ -32,6 +36,7 @@ def parse_args(args: list[str]):
         else:
             e.append(arg)
     return " ".join(e)
+
 
 if __name__ == "__main__":
     import sys
