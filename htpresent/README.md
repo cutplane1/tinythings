@@ -1,3 +1,4 @@
+# this one is cooler https://nbd.neocities.org/slidepresentation/Slide%20presentation%20about%20slides
 # htpresent (HyperText Presentation)
 
 simple script for making presentations
