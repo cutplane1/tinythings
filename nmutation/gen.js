@@ -14,9 +14,17 @@ function mutate(n) {
 function walk(buf, skip_chance = 0.3) {
 
     return buf.replace(/\d+/g, (match) => {
-        if (Math.random() > skip_chance) {
+        if (Math.random() < skip_chance) {
             return match;
         }
         return mutate(parseInt(match));
     });
 }
+
+let buf = "13";
+
+for (let i = 0; i < 6; i++) {
+    buf = walk(buf, 0);
+}
+
+console.log(buf);
