@@ -22,6 +22,10 @@ int check_for_license(char *str)
 
 int ask_for_license()
 {
+    if (fopen("licensefile", "r") != NULL)
+    {
+        return 0;
+    }
     char key[32];
     printf("enter your license key: ");
     scanf("%31s", key);
@@ -36,6 +40,8 @@ int ask_for_license()
         printf("Error checking license key.\n");
         return ask_for_license();
     } else {
+        FILE *f = fopen("licensefile", "w");
+        if (f) fclose(f);
         return 0;
     }
 }

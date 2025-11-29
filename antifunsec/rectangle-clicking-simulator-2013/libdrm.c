@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdio.h>
 
+// :DDDDD
 int check_for_license(char *str)
 {
     char cmd[256];
