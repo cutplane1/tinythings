@@ -91,13 +91,14 @@ int main() {
         vt.vt = VT_I4;
         vt.lVal = i;
 
+        BSTR url = NULL;
+        HWND hwnd = NULL;
         IDispatch *pDisp = NULL;
         if (SUCCEEDED(pShellWindows->lpVtbl->Item(pShellWindows, vt, &pDisp))) {
             IWebBrowserApp *pBrowser;
             if (SUCCEEDED(pDisp->lpVtbl->QueryInterface(
                 pDisp, &IID_IWebBrowserApp, (void**)&pBrowser))) {
-                BSTR url;
-                HWND hwnd;
+
                 pBrowser->lpVtbl->get_LocationURL(pBrowser, &url);
                 pBrowser->lpVtbl->get_HWND(pBrowser, (SHANDLE_PTR*)&hwnd);
                 if (hwnd == last) {
