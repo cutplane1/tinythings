@@ -1,1 +1,1 @@
-gcc get_path_from_last_explorer_window.c -lole32 -loleaut32 -lshell32 -luser32 -o expl_path.exe
+gcc get_path_from_last_explorer_window.c -lole32 -loleaut32 -lshell32 -luser32 -lshlwapi -o expl_path.exe

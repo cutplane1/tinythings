@@ -1,3 +1,5 @@
+#todo: fix for languages other than english
+
 i use it with quake-style terminal :)
 
 useful alias:
