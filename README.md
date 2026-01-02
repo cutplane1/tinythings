@@ -1,1 +1,1 @@
-monorepo for tiny or unfinished things
+[:3](https://codeberg.org/cutplane/tinythings)

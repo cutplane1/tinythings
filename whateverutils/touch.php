@@ -1,1 +1,0 @@
-<?php touch($argv[1]); // kek

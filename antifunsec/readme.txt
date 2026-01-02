@@ -1,1 +1,0 @@
-antifunsec is a toy drm for programs
